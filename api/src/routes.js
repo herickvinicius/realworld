@@ -8,6 +8,7 @@ routes.get("/", (req, res) => {
 });
 
 routes.get("/user/:userId", UserController.list);
+routes.put("/user/:userId", UserController.update);
 routes.post("/users", UserController.create);
 
 module.exports = routes;
