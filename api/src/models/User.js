@@ -17,6 +17,9 @@ class User extends Model {
         image: DataTypes.STRING,
       },
       {
+        defaultScope: {
+          attributes: ["email", "username", "bio", "image"],
+        },
         sequelize,
         timestamps: false,
         tableName: "users",
