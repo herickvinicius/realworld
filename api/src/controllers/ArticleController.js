@@ -1,32 +1,39 @@
-const User = require("../models/User");
+const Article = require("../models/Article");
+const Tag = require("../models/Tag");
 
-// TO DO: provide userId by JWT.
 module.exports = {
-  async getUser(req, res) {
-    const { userId } = req.params;
-    const user = await User.findByPk(userId, {
-      attributes: ["email", "username", "bio", "image"],
-    });
+  async getArticle(req, res) {
+    const { slug } = req.params;
+    const article = await Article.findOne(slug);
 
-    if (!user) {
+    if (!article) {
       return res.status(404).send({ error: error.message });
     }
 
-    return res.status(200).send({ user });
+    return res.status(200).send({ article });
   },
 
   async create(req, res) {
-    const { username, email, password } = req.body.user;
-    console.log(req.body);
-
+    const { title, description, body, tagList } = req.body.article;
+    const author = 1;
+    const slug = "test-slug";
     try {
-      const user = await User.create({
-        username,
-        email,
-        password,
+      const article = await Article.create({
+        slug,
+        title,
+        description,
+        body,
+        author,
       });
 
-      return res.status(200).send({ user });
+      const promiseArray = tagList.map((tag) =>
+        Tag.findOrCreate({ where: { tag } })
+      );
+      const promiseResolved = await Promise.all(promiseArray);
+
+      promiseResolved.map((tag) => console.log("Valor resolvido:", tag));
+
+      return res.status(200).send({ OK });
     } catch (error) {
       console.log(error.message);
       return res.status(500).send({ error: error.message });

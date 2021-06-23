@@ -3,6 +3,7 @@ module.exports = {
     user.id = undefined;
     user.password = undefined;
 
+    console.log(user);
     return user;
   },
 };
