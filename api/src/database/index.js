@@ -12,6 +12,6 @@ Article.init(connection);
 Tag.init(connection);
 
 Article.associate(connection.models);
-Tag.associate(connection.models);
+// Tag.associate(connection.models);
 
 module.exports = connection;

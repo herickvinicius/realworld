@@ -13,13 +13,13 @@ class Tag extends Model {
       }
     );
   }
-  static associate(models) {
-    this.belongsToMany(models.Article, {
-      foreignKey: "tagId",
-      through: "articleTags",
-      as: "articleList",
-    });
-  }
+  // static associate(models) {
+  //   this.belongsToMany(models.Article, {
+  //     foreignKey: "tagId",
+  //     through: "articleTags",
+  //     as: "articleList",
+  //   });
+  // }
 }
 
 module.exports = Tag;

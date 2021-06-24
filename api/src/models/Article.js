@@ -8,7 +8,6 @@ class Article extends Model {
         title: DataTypes.STRING,
         description: DataTypes.STRING,
         body: DataTypes.TEXT,
-        author: DataTypes.INTEGER,
       },
       {
         sequelize,
@@ -18,11 +17,16 @@ class Article extends Model {
     );
   }
   static associate(models) {
-    this.belongsToMany(models.Tag, {
-      foreignKey: "articleId",
-      through: "articleTags",
-      as: "tagList",
+    this.belongsTo(models.User, {
+      foreignKey: "authorId",
+      as: "author",
     });
+
+    // this.belongsToMany(models.Tag, {
+    //   foreignKey: "articleId",
+    //   through: "articleTags",
+    //   as: "tagList",
+    // });
   }
 }
 
