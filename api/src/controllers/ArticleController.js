@@ -19,24 +19,26 @@ module.exports = {
 
   async create(req, res) {
     const { title, description, body, tagList } = req.body.article;
-    const author = 1;
-    const slug = "test-slug";
+    const authorId = 1;
+    const slug = "test-slug-3";
     try {
       const article = await Article.create({
         slug,
         title,
         description,
         body,
-        author,
+        authorId,
       });
+      console.log(article.author);
 
       const promiseArray = tagList.map((tag) =>
-        Tag.findOrCreate({ where: { tag } })
+        Tag.findOrCreate({ where: { name: tag } })
       );
-      const promiseResolved = await Promise.all(promiseArray);
-      promiseResolved.map((tag) => console.log("Valor resolvido:", tag));
+      await Promise.all(promiseArray);
 
-      return res.status(200).send({ OK });
+      //promiseResolved.map((tag) => console.log("Valor resolvido:", tag));
+      //console.log(article);
+      return res.status(200).send({ article });
     } catch (error) {
       console.log(error.message);
       return res.status(500).send({ error: error.message });
