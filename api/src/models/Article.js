@@ -18,7 +18,7 @@ class Article extends Model {
     );
   }
   static associate(models) {
-    this.belongsToMany(models.Tags, {
+    this.belongsToMany(models.Tag, {
       foreignKey: "articleId",
       through: "articleTags",
       as: "tagList",
