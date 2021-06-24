@@ -15,7 +15,7 @@ routes.post("/users", UserController.create);
 
 routes.get("/profiles/:username", ProfileController.getProfile);
 
-routes.get("/articles/:slug", ArticleController.getArticle);
+routes.get("/articles/:slug", ArticleController.getBySlug);
 routes.post("/articles", ArticleController.create);
 
 module.exports = routes;
