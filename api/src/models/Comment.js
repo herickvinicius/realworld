@@ -1,18 +1,15 @@
 const { Model, DataTypes } = require("sequelize");
 
-class Article extends Model {
+class Comment extends Model {
   static init(sequelize) {
     super.init(
       {
-        slug: DataTypes.STRING,
-        title: DataTypes.STRING,
-        description: DataTypes.STRING,
         body: DataTypes.TEXT,
       },
       {
         sequelize,
         timestamps: true,
-        tableName: "articles",
+        tableName: "comments",
       }
     );
   }
@@ -21,12 +18,10 @@ class Article extends Model {
       foreignKey: "author",
     });
 
-    this.belongsToMany(models.Tag, {
-      foreignKey: "articleId",
-      through: "articleTags",
-      as: "tagList",
+    this.belongsTo(models.Article, {
+      foreignKey: "article",
     });
   }
 }
 
-module.exports = Article;
+module.exports = Comment;

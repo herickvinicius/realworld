@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      authorId: {
+      author: {
         type: Sequelize.INTEGER,
         references: { model: "users", key: "id" },
         onUpdate: "CASCADE",
