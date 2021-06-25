@@ -23,5 +23,6 @@ routes.get("/profiles/:username", protected, ProfileController.getProfile);
 
 routes.get("/articles/:slug", ArticleController.getBySlug);
 routes.post("/articles", protected, ArticleController.create);
+routes.put("/articles/:slug", protected, ArticleController.update);
 
 module.exports = routes;
