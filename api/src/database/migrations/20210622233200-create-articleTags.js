@@ -10,14 +10,12 @@ module.exports = {
       },
       articleId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: { model: "articles", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
       tagId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: { model: "tags", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",

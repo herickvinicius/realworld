@@ -23,14 +23,12 @@ module.exports = {
       },
       author: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: { model: "users", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
       article: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: { model: "articles", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
