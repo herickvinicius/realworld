@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 
 // TO DO: provide userId by JWT.
 module.exports = {
@@ -15,20 +16,18 @@ module.exports = {
     return res.status(200).send({ user });
   },
 
-  async create(req, res) {
+  async create(req, res, next) {
     const { username, email, password } = req.body.user;
-    console.log(req.body);
 
     try {
-      const user = await User.create({
+      const createdUser = await User.create({
         username,
         email,
-        password,
+        password: await bcrypt.hash(password, 10),
       });
 
-      return res.status(200).send({ user });
+      next();
     } catch (error) {
-      console.log(error.message);
       return res.status(500).send({ error: error.message });
     }
   },
