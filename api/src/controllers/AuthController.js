@@ -16,9 +16,6 @@ exports.login = async (req, res) => {
       return res.status(404).send({ error: "idk u" });
     }
 
-    match = await bcrypt.compare(password, user.dataValues.password);
-    console.log("match:", match);
-
     if (!(await bcrypt.compare(password, user.dataValues.password))) {
       console.log("Password don't match");
       return res.status(404).send({ error: "password don't match" });

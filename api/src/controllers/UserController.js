@@ -1,19 +1,21 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
-// TO DO: provide userId by JWT.
 module.exports = {
-  async getUser(req, res) {
-    const { userId } = req.params;
-    const user = await User.findByPk(userId, {
-      attributes: ["email", "username", "bio", "image"],
-    });
+  async getCurrentUser(req, res) {
+    const userId = req.userId;
 
-    if (!user) {
-      return res.status(404).send({ error: error.message });
+    try {
+      const user = await User.findByPk(userId);
+
+      if (!user) {
+        return res.status(404).send({ error: error.message });
+      }
+
+      return res.status(200).send({ user });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
     }
-
-    return res.status(200).send({ user });
   },
 
   async create(req, res, next) {
@@ -32,13 +34,10 @@ module.exports = {
     }
   },
 
-  // TO DO: provide userId by JWT.
   async update(req, res) {
-    const { email, password, bio, image } = req.body.user;
-    const { userId } = req.params;
-
-    console.log(email, password, bio, image);
-    console.log(userId);
+    const { email, username, bio, image } = req.body.user;
+    let { password } = req.body.user;
+    const userId = req.userId;
 
     try {
       const user = await User.findByPk(userId);
@@ -46,14 +45,18 @@ module.exports = {
       if (!user) {
         return res.status(404).send({ error: "NOT FOUND" });
       }
+      if (password) {
+        password = await bcrypt.hash(password, 10);
+      }
 
       const updatedUser = await user.update({
         email,
+        username,
         password,
         bio,
         image,
       });
-      return res.status(200).send({ updatedUser });
+      return res.status(200).send({ user: updatedUser });
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }

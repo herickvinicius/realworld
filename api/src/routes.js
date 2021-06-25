@@ -15,8 +15,8 @@ routes.get("/", (req, res) => {
 
 routes.post("/users/login", AuthController.login);
 
-routes.get("/user/:userId", protected, UserController.getUser); // TO DO: provide userId by JWT.
-routes.put("/user/:userId", protected, UserController.update); // TO DO: provide userId by JWT.
+routes.get("/user", protected, UserController.getCurrentUser);
+routes.put("/user", protected, UserController.update); // TO DO: provide userId by JWT.
 routes.post("/users", UserController.create, AuthController.login);
 
 routes.get("/profiles/:username", ProfileController.getProfile);
