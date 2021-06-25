@@ -16,12 +16,12 @@ routes.get("/", (req, res) => {
 routes.post("/users/login", AuthController.login);
 
 routes.get("/user", protected, UserController.getCurrentUser);
-routes.put("/user", protected, UserController.update); // TO DO: provide userId by JWT.
+routes.put("/user", protected, UserController.update);
 routes.post("/users", UserController.create, AuthController.login);
 
-routes.get("/profiles/:username", ProfileController.getProfile);
+routes.get("/profiles/:username", protected, ProfileController.getProfile);
 
 routes.get("/articles/:slug", ArticleController.getBySlug);
-routes.post("/articles", ArticleController.create);
+routes.post("/articles", protected, ArticleController.create);
 
 module.exports = routes;
