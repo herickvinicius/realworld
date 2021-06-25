@@ -20,7 +20,7 @@ module.exports = {
     const { username, email, password } = req.body.user;
 
     try {
-      const createdUser = await User.create({
+      await User.create({
         username,
         email,
         password: await bcrypt.hash(password, 10),
