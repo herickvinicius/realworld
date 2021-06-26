@@ -1,16 +1,24 @@
 const Article = require("../models/Article");
 const Tag = require("../models/Tag");
+const toDTO = require("../helpers/toDTO");
 
 module.exports = {
   async getBySlug(req, res) {
     const { slug } = req.params;
     try {
-      const article = await Article.findOne({ where: { slug } });
+      let article = await Article.findOne({
+        where: { slug },
+      });
+
+      tagList = await Tag.findAll({
+        where: {},
+      });
 
       if (!article) {
         return res.status(404).send({ error: "not found" });
       }
 
+      article = toDTO.articleDTO(article);
       return res.status(200).send({ article });
     } catch (error) {
       return res.status(500).send({ error: error.message });
@@ -51,7 +59,6 @@ module.exports = {
 
     try {
       const article = await Article.findOne({ where: { slug } });
-      console.log("entrou");
       if (!article) {
         return res.status(404).send({ error: "Not found" });
       }
@@ -74,6 +81,28 @@ module.exports = {
         body,
       });
       return res.status(200).send({ article: updatedArticle });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
+
+  async delete(req, res) {
+    const { slug } = req.params;
+    const userId = req.userId;
+
+    try {
+      const article = await Article.findOne({ where: { slug } });
+
+      if (!article) {
+        return res.status(404).send({ error: "Not found" });
+      }
+
+      if (article.author != userId) {
+        return res.status(403).send({ error: "Unauthorized" });
+      }
+
+      await article.destroy({ where: { slug } });
+      res.status(200).send({});
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }

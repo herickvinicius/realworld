@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const toDTO = require("../helpers/toDTO");
 
 module.exports = {
   async getCurrentUser(req, res) {
@@ -12,7 +13,7 @@ module.exports = {
         return res.status(404).send({ error: error.message });
       }
 
-      return res.status(200).send({ user });
+      return res.status(200).send(toDTO.userDTO(user));
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }

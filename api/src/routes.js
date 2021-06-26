@@ -4,6 +4,7 @@ const AuthController = require("./controllers/AuthController");
 const UserController = require("./controllers/UserController");
 const ProfileController = require("./controllers/ProfileController");
 const ArticleController = require("./controllers/ArticleController");
+const TagController = require("./controllers/TagController");
 
 const protected = require("./middlewares/AuthMiddleware");
 
@@ -24,5 +25,8 @@ routes.get("/profiles/:username", protected, ProfileController.getProfile);
 routes.get("/articles/:slug", ArticleController.getBySlug);
 routes.post("/articles", protected, ArticleController.create);
 routes.put("/articles/:slug", protected, ArticleController.update);
+routes.delete("/articles/:slug", protected, ArticleController.delete);
+
+routes.get("/tags", TagController.getTags);
 
 module.exports = routes;
