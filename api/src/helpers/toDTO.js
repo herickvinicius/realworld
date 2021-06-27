@@ -14,14 +14,13 @@ const profileDTO = (data) => {
   profile.username = data.username;
   profile.bio = data.bio;
   profile.image = data.image;
-  profile.following = false;
+  profile.following = false; //mock
 
   return profile;
 };
 
 const tagDTO = (data) => {
   let tags = data.map((tag) => tag.name);
-
   return tags;
 };
 
@@ -31,14 +30,14 @@ const articleDTO = (data) => {
   article.title = data.title;
   article.description = data.description;
   article.body = data.body;
-  article.tagList = tagDTO(data.tagList);
+  article.tagList = data.tagList;
   article.createdAt = data.createdAt;
   article.updatedAt = data.updatedAt;
-  article.favorited = false;
-  article.favoritesCount = 0;
-  article.author = profileDTO(data);
+  article.favorited = false; //mock
+  article.favoritesCount = 0; //mock
+  article.author = profileDTO(data.authorName);
 
-  return user;
+  return article;
 };
 
 module.exports = { userDTO, profileDTO, tagDTO, articleDTO };

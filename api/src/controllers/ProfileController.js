@@ -17,4 +17,15 @@ module.exports = {
       return res.status(500).send({ error: error.message });
     }
   },
+
+  async getProfileByPk(userId) {
+    try {
+      const profile = await User.findByPk(userId);
+      if (!profile) {
+        return res.status(404).send({ error: "not found" });
+      }
+
+      return toDTO.profileDTO(profile);
+    } catch (error) {}
+  },
 };

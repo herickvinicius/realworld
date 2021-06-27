@@ -1,5 +1,6 @@
 const Article = require("../models/Article");
-const Tag = require("../models/Tag");
+const TagController = require("./TagController");
+const ProfileController = require("./ProfileController");
 const toDTO = require("../helpers/toDTO");
 
 module.exports = {
@@ -8,18 +9,18 @@ module.exports = {
     try {
       let article = await Article.findOne({
         where: { slug },
-      });
-
-      tagList = await Tag.findAll({
-        where: {},
+        include: [{ association: "tagList" }, { association: "authorName" }],
       });
 
       if (!article) {
         return res.status(404).send({ error: "not found" });
       }
 
-      article = toDTO.articleDTO(article);
-      return res.status(200).send({ article });
+      article.tagList = article.tagList.map((Tag) => {
+        return Tag.dataValues.name;
+      });
+      console.log(article.tagList);
+      return res.status(200).send({ article: toDTO.articleDTO(article) });
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
@@ -33,7 +34,7 @@ module.exports = {
       .replace(/ /g, "-")
       .replace(/[^\w-]+/g, "");
     try {
-      const article = await Article.create({
+      let article = await Article.create({
         slug,
         title,
         description,
@@ -41,12 +42,23 @@ module.exports = {
         author,
       });
 
-      const promiseArray = tagList.map((tag) =>
-        Tag.findOrCreate({ where: { name: tag } })
-      );
-      await Promise.all(promiseArray);
+      const tagsPromise = tagList.map((tag) => TagController.create(tag));
+      const tagsResolved = await Promise.all(tagsPromise);
+      const ids = tagsResolved.map((Tag) => Tag.id);
 
-      return res.status(200).send({ article });
+      const tagListPromise = ids.map((id) => article.addTagList(id));
+      let tagListResolved = await Promise.all(tagListPromise);
+      article.tagList = tagListResolved.flat();
+
+      article.tagList = tagsResolved.map((articleTags) => {
+        return articleTags.dataValues.name;
+      });
+
+      article.authorName = await ProfileController.getProfileByPk(
+        article.author
+      );
+
+      return res.status(200).send({ article: toDTO.articleDTO(article) });
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
@@ -58,7 +70,10 @@ module.exports = {
     const userId = req.userId;
 
     try {
-      const article = await Article.findOne({ where: { slug } });
+      let article = await Article.findOne({
+        where: { slug },
+        include: [{ association: "tagList" }, { association: "authorName" }],
+      });
       if (!article) {
         return res.status(404).send({ error: "Not found" });
       }
@@ -74,13 +89,18 @@ module.exports = {
           .replace(/[^\w-]+/g, "");
       }
 
-      const updatedArticle = await article.update({
+      await article.update({
         slug,
         title,
         description,
         body,
       });
-      return res.status(200).send({ article: updatedArticle });
+
+      article.tagList = article.tagList.map((Tag) => {
+        return Tag.dataValues.name;
+      });
+
+      return res.status(200).send({ article: toDTO.articleDTO(article) });
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }

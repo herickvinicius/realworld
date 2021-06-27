@@ -19,6 +19,7 @@ class Article extends Model {
   static associate(models) {
     this.belongsTo(models.User, {
       foreignKey: "author",
+      as: "authorName",
     });
 
     this.belongsToMany(models.Tag, {

@@ -11,4 +11,13 @@ module.exports = {
       return res.status(500).send({ error: error.message });
     }
   },
+
+  async create(data) {
+    try {
+      const [tag] = await Tag.findOrCreate({ where: { name: data } });
+      return tag;
+    } catch (error) {
+      return error;
+    }
+  },
 };
