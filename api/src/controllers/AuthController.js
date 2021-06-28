@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const toDTO = require("../helpers/toDTO");
 const errors = require("../helpers/errors");
 
 exports.login = async (req, res) => {
@@ -8,7 +9,7 @@ exports.login = async (req, res) => {
 
   try {
     if (!email || !password) {
-      return res.status(401).send({ error: "where is your id?" });
+      errors.unauthorizedResponse(res);
     }
 
     let user = await User.findOne({ where: { email } });
@@ -21,13 +22,10 @@ exports.login = async (req, res) => {
       errors.notFoundResponse(res);
     }
 
-    user.dataValues.token = jwt.sign(
-      { userId: user.dataValues.id },
-      process.env.JWT_SALT
-    );
+    user.token = jwt.sign({ userId: user.dataValues.id }, process.env.JWT_SALT);
 
-    return res.status(200).send({ user });
+    return res.status(200).send({ user: toDTO.userDTO(user) });
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    errors.unhandledResponse(res, error.message);
   }
 };
