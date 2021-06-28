@@ -9,6 +9,7 @@ services:
       - 5432:5432
     volumes:
       - ./volumes/realworld:/var/lib/postgresql/data
+      # INSERT A CUSTOM PATH ABOVE IF YOU WANT.
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
