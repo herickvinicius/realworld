@@ -2,6 +2,7 @@ const Article = require("../models/Article");
 const TagController = require("./TagController");
 const ProfileController = require("./ProfileController");
 const toDTO = require("../helpers/toDTO");
+const errors = require("../helpers/errors");
 
 module.exports = {
   async getBySlug(req, res) {
@@ -13,13 +14,12 @@ module.exports = {
       });
 
       if (!article) {
-        return res.status(404).send({ error: "not found" });
+        errors.notFoundResponse(res);
       }
 
       article.tagList = article.tagList.map((Tag) => {
         return Tag.dataValues.name;
       });
-      console.log(article.tagList);
       return res.status(200).send({ article: toDTO.articleDTO(article) });
     } catch (error) {
       return res.status(500).send({ error: error.message });
@@ -75,7 +75,7 @@ module.exports = {
         include: [{ association: "tagList" }, { association: "authorName" }],
       });
       if (!article) {
-        return res.status(404).send({ error: "Not found" });
+        errors.notFoundResponse(res);
       }
 
       if (article.author != userId) {
@@ -114,7 +114,7 @@ module.exports = {
       const article = await Article.findOne({ where: { slug } });
 
       if (!article) {
-        return res.status(404).send({ error: "Not found" });
+        errors.notFoundResponse(res);
       }
 
       if (article.author != userId) {
