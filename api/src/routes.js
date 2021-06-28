@@ -1,4 +1,5 @@
 const express = require("express");
+const errors = require("./helpers/errors");
 
 const AuthController = require("./controllers/AuthController");
 const UserController = require("./controllers/UserController");
@@ -28,5 +29,15 @@ routes.put("/articles/:slug", protected, ArticleController.update);
 routes.delete("/articles/:slug", protected, ArticleController.delete);
 
 routes.get("/tags", TagController.getTags);
+
+// Handle unexistent routes.
+routes.use((req, res) => {
+  errors.notFoundResponse(res);
+});
+
+//Handle another errors.
+routes.use((error, req, res) => {
+  errors.unhandledResponse(res, error.message);
+});
 
 module.exports = routes;
