@@ -15,7 +15,7 @@ module.exports = {
       profile = toDTO.profileDTO(profile);
       return res.status(200).send({ profile });
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 
@@ -27,6 +27,8 @@ module.exports = {
       }
 
       return toDTO.profileDTO(profile);
-    } catch (error) {}
+    } catch (error) {
+      errors.unhandledResponse(res, error.message);
+    }
   },
 };

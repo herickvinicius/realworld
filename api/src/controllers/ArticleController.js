@@ -22,7 +22,7 @@ module.exports = {
       });
       return res.status(200).send({ article: toDTO.articleDTO(article) });
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 
@@ -60,7 +60,7 @@ module.exports = {
 
       return res.status(200).send({ article: toDTO.articleDTO(article) });
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 
@@ -79,7 +79,7 @@ module.exports = {
       }
 
       if (article.author != userId) {
-        return res.status(403).send({ error: "Unauthorized" });
+        errors.unauthorizedResponse(res);
       }
 
       if (title) {
@@ -102,7 +102,7 @@ module.exports = {
 
       return res.status(200).send({ article: toDTO.articleDTO(article) });
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 
@@ -118,13 +118,13 @@ module.exports = {
       }
 
       if (article.author != userId) {
-        return res.status(403).send({ error: "Unauthorized" });
+        errors.unauthorizedResponse(res);
       }
 
       await article.destroy({ where: { slug } });
       res.status(200).send({});
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 };

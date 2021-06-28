@@ -16,7 +16,7 @@ module.exports = {
 
       return res.status(200).send(toDTO.userDTO(user));
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 
@@ -32,7 +32,7 @@ module.exports = {
 
       next();
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 
@@ -60,7 +60,7 @@ module.exports = {
       });
       return res.status(200).send({ user: updatedUser });
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 };

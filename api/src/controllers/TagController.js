@@ -8,7 +8,7 @@ module.exports = {
 
       return res.status(200).send({ tags: toDTO.tagDTO(tags) });
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      errors.unhandledResponse(res, error.message);
     }
   },
 
@@ -17,7 +17,7 @@ module.exports = {
       const [tag] = await Tag.findOrCreate({ where: { name: data } });
       return tag;
     } catch (error) {
-      return error;
+      errors.unhandledResponse(res, error.message);
     }
   },
 };
