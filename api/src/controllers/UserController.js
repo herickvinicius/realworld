@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const toDTO = require("../helpers/toDTO");
+const errors = require("../helpers/errors");
 
 module.exports = {
   async getCurrentUser(req, res) {
@@ -10,7 +11,7 @@ module.exports = {
       const user = await User.findByPk(userId);
 
       if (!user) {
-        return res.status(404).send({ error: error.message });
+        errors.notFoundResponse(res);
       }
 
       return res.status(200).send(toDTO.userDTO(user));
@@ -44,7 +45,7 @@ module.exports = {
       const user = await User.findByPk(userId);
 
       if (!user) {
-        return res.status(404).send({ error: "NOT FOUND" });
+        errors.notFoundResponse(res);
       }
       if (password) {
         password = await bcrypt.hash(password, 10);

@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const toDTO = require("../helpers/toDTO");
+const errors = require("../helpers/errors");
 
 module.exports = {
   async getProfile(req, res) {
@@ -8,7 +9,7 @@ module.exports = {
       let profile = await User.findOne({ where: { username } });
 
       if (!profile) {
-        return res.status(404).send({ error: "not found" });
+        errors.notFoundResponse(res);
       }
 
       profile = toDTO.profileDTO(profile);
@@ -22,7 +23,7 @@ module.exports = {
     try {
       const profile = await User.findByPk(userId);
       if (!profile) {
-        return res.status(404).send({ error: "not found" });
+        errors.notFoundResponse(res);
       }
 
       return toDTO.profileDTO(profile);
